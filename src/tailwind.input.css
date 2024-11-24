@@ -15,3 +15,24 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+
+@layer utilities {
+  .background {
+      @apply fixed inset-0 bg-[#27183a] overflow-hidden z-[-1];
+  }
+
+  @keyframes move {
+      100% {
+          transform: translate3d(0, 0, 1px) rotate(360deg);
+      }
+  }
+
+  .background span {
+      @apply absolute rounded-full;
+      width: 41vmin;
+      height: 41vmin;
+      animation: move linear infinite;
+      backface-visibility: hidden;
+  }
+}
