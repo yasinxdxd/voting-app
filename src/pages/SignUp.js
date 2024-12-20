@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { useNavigate } from 'react-router-dom';
 import { Label, Input, CheckBox } from "../components/BasicComponents";
 import { Background } from "../components/Background";
@@ -76,6 +76,50 @@ const InputPassword = ({value, onChange}) => {
         </div>
     );
 }
+
+const InputBirthDate = ({value, onChange}) => {
+    return (
+        <div>
+            <Label
+                text={"Birth Date"}
+                name={"birthdate"}
+            />
+            <Input
+                type={"date"}
+                name={"birthdate"}
+                // placeholder={"••••••••"}
+                required={true}
+                value={value}
+                onChange={onChange}
+            />
+        </div>
+    );
+}
+
+const InputGender = ({ value, onChange }) => {
+    return (
+        <div>
+            <Label
+                text={"Gender"}
+                name={"gender"}
+            />
+            <select
+                name="gender"
+                required={true}
+                value={value}
+                onChange={onChange}
+                className="input-class" // Add styling if needed
+            >
+                <option value="" disabled>
+                    Select Gender
+                </option>
+                <option value="M">Male</option>
+                <option value="F">Female</option>
+                <option value="O">Other</option>
+            </select>
+        </div>
+    );
+};
 
 const Modal = ({ open, onClose, children }) => {
     return (
@@ -190,16 +234,23 @@ export const SignUp = () => {
         last_name: "",
         birthdate: null,
         password: "",
+        gender: "O",
     });
 
     const navigate = useNavigate();
 
     const changeHandler = (event) => {
         const { name, type, checked, value } = event.target;
-        setCredentials({
-            ...credentials,
-            [name]: type === 'checkbox' ? checked : value,
-        })
+        setCredentials((prev) => ({
+            ...prev,
+            [name]: name === "gender"
+                ? value
+                : (name === "birthdate" && value !== null)
+                ? value.split("T")[0] // Ensure the correct format
+                : type === "checkbox"
+                ? checked
+                : value,
+        }));
         console.log(credentials);
     };
 
@@ -208,7 +259,10 @@ export const SignUp = () => {
 
         const response = await fetch('http://localhost:5000/auth/signup', {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: {
+                'Content-Type': 'application/json',
+                'x-api-key': process.env.VOTING_API_BACKEND_KEY
+             },
             body: JSON.stringify(credentials),
             credentials: 'include', // Include session cookies
         });
@@ -247,11 +301,21 @@ export const SignUp = () => {
                         onChange={changeHandler}
                         />
                     
+                    <InputBirthDate
+                        value={credentials.birthdate}
+                        onChange={changeHandler}
+                    />
+
+                    <InputGender
+                        value={credentials.gender}
+                        onChange={changeHandler}
+                    />
+
                     <TermsAndConditions
                         onChange={changeHandler}
                         value={"I agree with"}
                         setShowModal={setShowModal}
-                        />
+                    />
 
                     <button type="submit" className="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Create your account</button>
 
