@@ -261,7 +261,7 @@ export const SignUp = () => {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'x-api-key': process.env.VOTING_API_BACKEND_KEY
+                'x-api-key': process.env.REACT_APP_VOTING_API_BACKEND_KEY
              },
             body: JSON.stringify(credentials),
             credentials: 'include', // Include session cookies
