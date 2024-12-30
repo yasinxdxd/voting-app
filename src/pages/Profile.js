@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom"; // useNavigate ekleyin
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend } from "chart.js";
 import { Bar } from "react-chartjs-2";
 import { Background } from "../components/Background";
+import { Navbar } from "../components/Navbar";
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
@@ -85,17 +86,18 @@ export const Profile = () => {
 
   return (
     <Background >
+      <Navbar />
       <div className="min-h-screen p-6 ">
         <h1 className="text-4xl font-bold text-white text-center mb-10">Profile</h1>
         <div className="max-w-7xl mx-auto bg-white rounded-lg shadow-sm overflow-hidden">
           <div className="bg-pink-300 grid md:grid-cols-2">
-            <div className="bg-fuchsia-200 space-y-6 " >
-              <h2 className="text-3xl font-bold text-gray-900 text-center">My Profile</h2>
+            <div className="bg-fuchsia-900 space-y-6 " >
+              <h2 className="text-3xl font-bold text-white text-center">My Profile</h2>
               <div className="flex justify-center mb-6">
                 <img 
                   src={userData.profileImage} 
                   alt="Profile" 
-                  className="w-48 h-48 rounded-full object-cover border-4 border-purple-900"
+                  className="w-48 h-48 rounded-full object-cover border-4 border-gray-600"
                 />
               </div>
               <div className="space-y-4 bg-fuchsia-200 p-6 rounded">
@@ -130,15 +132,15 @@ export const Profile = () => {
               </div>
               <button
                 onClick={handleEditProfile}
-                className="flex items-center justify-center gap-2 bg-purple-900 text-white px-6 py-3 rounded-lg hover:bg-purple-400 transition-colors duration-300 shadow-lg hover:shadow-xl font-semibold text-lg ml-44 z-10 relative"
+                className="flex items-center justify-center gap-2 bg-gray-600 text-white px-6 py-3 rounded-lg hover:bg-purple-400 transition-colors duration-300 shadow-lg hover:shadow-xl font-semibold text-lg ml-44 z-10 relative"
               >
                 <FaEdit className="text-xl" />
                 Edit Profile
               </button>
             </div>
 
-            <div className="bg-fuchsia-300 space-y-6">
-              <h2 className="text-3xl font-bold text-gray-900 text-center">Previous Votes</h2>
+            <div className="bg-gray-600 space-y-6">
+              <h2 className="text-3xl font-bold text-white text-center">Previous Votes</h2>
               <div className="space-y-6 px-6">
               {initialSurveys.map(([category, details]) => 
                 renderSurveyResults(category, details)
@@ -161,7 +163,7 @@ export const Profile = () => {
               {!showAllSurveys && remainingSurveys.length > 0 && (
                 <button
                   onClick={() => setShowAllSurveys(true)}
-                  className="w-full flex items-center justify-center gap-2 bg-purple-900 text-white px-6 py-3 rounded-lg 
+                  className="w-full flex items-center justify-center gap-2 bg-fuchsia-900 text-white px-6 py-3 rounded-lg 
                   hover:bg-purple-500 transition-all duration-300 shadow-lg hover:shadow-xl font-semibold text-lg"
                 >
                   Show More <FaAngleDown className="text-xl" />

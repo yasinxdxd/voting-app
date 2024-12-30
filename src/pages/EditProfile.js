@@ -2,6 +2,7 @@ import { useState } from "react";
 import { FaCamera } from "react-icons/fa";
 import { toast, ToastContainer } from "react-toastify";
 import { Background } from "../components/Background";
+import { Navbar } from "../components/Navbar";
 
 import "react-toastify/dist/ReactToastify.css";
 
@@ -47,9 +48,10 @@ export const EditProfile = () => {
 
   return (
     <Background>
+      <Navbar />
     <div className="min-h-screen bg-background p-4 md:p-8">
-      <div className=" bg-fuchsia-200	 max-w-6xl mx-auto bg-card rounded-lg shadow-sm p-8 md:p-8">
-        <h1 className="text-3xl font-bold text-gray-900 text-center">Edit Profile</h1>
+      <div className=" bg-gray-600	 max-w-6xl mx-auto bg-card rounded-lg shadow-sm p-8 md:p-8">
+        <h1 className="text-3xl font-bold text-white text-center">Edit Profile</h1>
         
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {/* Left Section - Profile Picture */}
@@ -91,7 +93,7 @@ export const EditProfile = () => {
             <form onSubmit={handleSubmit} className="space-y-6">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                  <label htmlFor="firstName" className="block text-body font-body text-foreground mb-2">
+                  <label htmlFor="firstName" className="text-white block text-body font-body text-foreground mb-2">
                     First Name
                   </label>
                   <input
@@ -106,7 +108,7 @@ export const EditProfile = () => {
                 </div>
 
                 <div>
-                  <label htmlFor="lastName" className="block text-body font-body text-foreground mb-2">
+                  <label htmlFor="lastName" className="text-white block text-body font-body text-foreground mb-2">
                     Last Name
                   </label>
                   <input
@@ -121,7 +123,7 @@ export const EditProfile = () => {
                 </div>
 
                 <div>
-                  <label htmlFor="phoneNumber" className="block text-body font-body text-foreground mb-2">
+                  <label htmlFor="phoneNumber" className="text-white block text-body font-body text-foreground mb-2">
                     Phone Number
                   </label>
                   <input
@@ -136,7 +138,7 @@ export const EditProfile = () => {
                 </div>
 
                 <div>
-                  <label htmlFor="dateOfBirth" className="block text-body font-body text-foreground mb-2">
+                  <label htmlFor="dateOfBirth" className="text-white block text-body font-body text-foreground mb-2">
                     Date of Birth
                   </label>
                   <input
@@ -151,7 +153,7 @@ export const EditProfile = () => {
                 </div>
 
                 <div className="md:col-span-2">
-                  <label htmlFor="address" className="block text-body font-body text-foreground mb-2">
+                  <label htmlFor="address" className="text-white block text-body font-body text-foreground mb-2">
                     Address
                   </label>
                   <textarea
@@ -169,7 +171,7 @@ export const EditProfile = () => {
               <div className="flex justify-end">
                 <button
                   type="submit"
-                  className="px-6 py-2 font-bold bg-primary text-primary-foreground rounded-md hover:bg-primary/90 transition-colors duration-200"
+                  className="text-white px-6 py-2 font-bold bg-primary text-primary-foreground rounded-md hover:bg-primary/90 transition-colors duration-200"
                 >
                   Save Changes
                 </button>

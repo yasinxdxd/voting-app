@@ -5,6 +5,7 @@ import { Home } from "./pages/Home.js";
 
 import { Profile } from "./pages/Profile.js";
 import { EditProfile } from "./pages/EditProfile.js";
+import { AboutUs } from "./pages/AboutUs.js";
 import { AdminSignIn } from "./pages/AdminSignIn.js";
 import { AdminHome } from "./pages/AdminHome.js";
 
@@ -19,6 +20,7 @@ const App = () => {
 
                 <Route path="/profile" element={<Profile />} />
                 <Route path="/editprofile" element={<EditProfile />} />
+                <Route path="/aboutus" element={<AboutUs />} />
 
                 <Route path="/admin/signin" element={<AdminSignIn />} />
                 <Route path="/admin/home" element={<AdminHome />} />
