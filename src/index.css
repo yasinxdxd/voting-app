@@ -1078,9 +1078,9 @@ video {
   background-color: rgb(75 85 99 / var(--tw-bg-opacity, 1));
 }
 
-.bg-pink-300 {
+.bg-purple-100 {
   --tw-bg-opacity: 1;
-  background-color: rgb(249 168 212 / var(--tw-bg-opacity, 1));
+  background-color: rgb(243 232 255 / var(--tw-bg-opacity, 1));
 }
 
 .bg-purple-100 {
@@ -1142,6 +1142,10 @@ video {
 
 .p-1 {
   padding: 0.25rem;
+}
+
+.p-2 {
+  padding: 0.5rem;
 }
 
 .p-2 {
