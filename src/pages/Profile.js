@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { FaUser, FaBirthdayCake, FaPhone, FaMapMarkerAlt, FaEdit,FaAngleDown } from "react-icons/fa";
 import { useNavigate } from "react-router-dom"; // useNavigate ekleyin
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend } from "chart.js";
@@ -10,79 +10,48 @@ ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend)
 
 export const Profile = () => {
   const navigate = useNavigate();
-  const [showAllSurveys, setShowAllSurveys] = useState(false);
-  const [userData] = useState({
-    username: "John Smith",
-    birthDate: "1990-05-15",
-    telephone: "+1 (555) 123-4567",
-    address: "123 Democracy Street, Voteville, VS 12345",
+  // const [showAllSurveys, setShowAllSurveys] = useState(false);
+  const [userData, setUserData] = useState({
+    tc_no: "",
+    first_name: "",
+    last_name: "",
+    birthdate: "",
+    gender: "",
+    phone_number: null,
+    address: null,
+    created_at: "",
     profileImage: "https://images.unsplash.com/photo-1633332755192-727a05c4013d?ixlib=rb-4.0.3",
-    viewVotes: {
-      "Favorite Action Movie": {
-        vote: "The Dark Knight",
-        options: ["The Dark Knight", "Inception", "Avengers: Endgame", "Mad Max: Fury Road"],
-        results: { "The Dark Knight": 45, "Inception": 30, "Avengers: Endgame": 15, "Mad Max: Fury Road": 10 }
-      },
-      "Best Sci-Fi Movie": {
-        vote: "Interstellar",
-        options: ["Interstellar", "Blade Runner 2049", "The Matrix", "Arrival"],
-        results: { "Interstellar": 40, "Blade Runner 2049": 25, "The Matrix": 20, "Arrival": 15 }
-      },
-      "Top Drama Film": {
-        vote: "The Shawshank Redemption",
-        options: ["The Shawshank Redemption", "The Godfather", "Forrest Gump", "Schindler's List"],
-        results: { "The Shawshank Redemption": 50, "The Godfather": 30, "Forrest Gump": 12, "Schindler's List": 8 }
-      },
-      "Favorite Comedy": {
-        vote: "The Grand Budapest Hotel",
-        options: ["The Grand Budapest Hotel", "Superbad", "Bridesmaids", "The Hangover"],
-        results: { "The Grand Budapest Hotel": 35, "Superbad": 25, "Bridesmaids": 22, "The Hangover": 18 }
-      }
-    }
   });
-
-  const renderSurveyResults = (category, details) => {
-    const data = {
-      labels: Object.keys(details.results),
-      datasets: [
-        {
-          label: "Votes",
-          data: Object.values(details.results),
-          backgroundColor: ["#4CAF50", "#FF9800", "#2196F3", "#FFC107"],
-        },
-      ],
-    };
-
-    return (
-      <div key={category} className="mb-6 bg-gray-100 p-6 rounded " >
-        <h4 className="text-lg font-semibold text-gray-900 mb-4 normal-case ">{category}</h4>
-        <div style={{ height: "200px", width: "100%" }}>
-          <Bar
-            data={data}
-            options={{
-              responsive: true,
-              maintainAspectRatio: false,
-              plugins: {
-                legend: {
-                  position: "top"
-                }
-              }
-            }}
-          />
-        </div>
-        <p className="mt-4 text-gray-700">
-          My Vote: <span className="font-bold text-purple-900">{details.vote}</span>
-        </p>
-      </div>
-    );
-  };
 
   const handleEditProfile = () => {
     navigate("/editProfile"); 
   };
-  const viewVotes = Object.entries(userData.viewVotes);
-  const initialSurveys = viewVotes.slice(0, 2);
-  const remainingSurveys = viewVotes.slice(2);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch("http://localhost:5000/profile/user", {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            "x-api-key": process.env.REACT_APP_VOTING_API_BACKEND_KEY,
+          },
+          credentials: "include", // Include session cookies
+        });
+
+        if (!response.ok) {
+          throw new Error("Failed to fetch user data");
+        }
+
+        const data = await response.json();
+        setUserData(data.record); // Update userData with the response
+      } catch (error) {
+        console.error("Error fetching user data:", error.message);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   return (
     <Background >
@@ -104,22 +73,36 @@ export const Profile = () => {
                 <div className="flex items-center gap-4">
                   <FaUser className="text-gray-600 text-xl" />
                   <div>
-                    <p className="text-sm font-semibold text-gray-600">Username</p>
-                    <p className="text-gray-900">{userData.username}</p>
+                    <p className="text-sm font-semibold text-gray-600">TC No</p>
+                    <p className="text-gray-900">{userData.tc_no}</p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-4">
+                  <FaUser className="text-gray-600 text-xl" />
+                  <div>
+                    <p className="text-sm font-semibold text-gray-600">Name</p>
+                    <p className="text-gray-900">{userData.first_name} {userData.last_name}</p>
                   </div>
                 </div>
                 <div className="flex items-center gap-4">
                   <FaBirthdayCake className="text-gray-600 text-xl" />
                   <div>
                     <p className="text-sm font-semibold text-gray-600">Birth Date</p>
-                    <p className="text-gray-900">{userData.birthDate}</p>
+                    <p className="text-gray-900">{userData.birthdate}</p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-4">
+                  <FaBirthdayCake className="text-gray-600 text-xl" />
+                  <div>
+                    <p className="text-sm font-semibold text-gray-600">Gender</p>
+                    <p className="text-gray-900">{userData.gender}</p>
                   </div>
                 </div>
                 <div className="flex items-center gap-4">
                   <FaPhone className="text-gray-600 text-xl" />
                   <div>
-                    <p className="text-sm font-semibold text-gray-600">Telephone</p>
-                    <p className="text-gray-900">{userData.telephone}</p>
+                    <p className="text-sm font-semibold text-gray-600">Phone</p>
+                    <p className="text-gray-900">{userData.phone_number}</p>
                   </div>
                 </div>
                 <div className="flex items-center gap-4">
@@ -139,38 +122,7 @@ export const Profile = () => {
               </button>
             </div>
 
-            <div className="bg-gray-600 space-y-6">
-              <h2 className="text-3xl font-bold text-white text-center">Previous Votes</h2>
-              <div className="space-y-6 px-6">
-              {initialSurveys.map(([category, details]) => 
-                renderSurveyResults(category, details)
-                )}
-                 {showAllSurveys && (
-                <div className="space-y-6">
-                  {remainingSurveys.map(([category, details]) => 
-                    renderSurveyResults(category, details)
-                  )}
-                </div>
-              )}
-                {showAllSurveys && (
-                <div className="space-y-6">
-                  {remainingSurveys.map(([category, details]) => 
-                    renderSurveyResults(category, details)
-                  )}
-                </div>
-              )}
 
-              {!showAllSurveys && remainingSurveys.length > 0 && (
-                <button
-                  onClick={() => setShowAllSurveys(true)}
-                  className="w-full flex items-center justify-center gap-2 bg-fuchsia-900 text-white px-6 py-3 rounded-lg 
-                  hover:bg-purple-500 transition-all duration-300 shadow-lg hover:shadow-xl font-semibold text-lg"
-                >
-                  Show More <FaAngleDown className="text-xl" />
-                </button>
-              )}
-              </div>
-            </div>
           </div>
         </div>
       </div>

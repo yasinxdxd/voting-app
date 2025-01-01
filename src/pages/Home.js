@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { FaUserCircle, FaCheckCircle, FaTimesCircle } from "react-icons/fa";
 import { IoMdClose } from "react-icons/io";
 import { Navbar } from "../components/Navbar";
@@ -6,80 +6,143 @@ import { Background } from "../components/Background";
 
 export const Home = () => {
   const [hasVoted, setHasVoted] = useState({});
+
+  useEffect(() => {
+    const fetchHasVotedStatus = async () => {
+      try {
+        const response = await fetch("http://localhost:5000/vote/status", {
+          method: 'GET',
+          headers: {
+            'x-api-key': process.env.REACT_APP_VOTING_API_BACKEND_KEY,
+          },
+          credentials: 'include',
+        });
+
+        if (!response.ok) {
+          throw new Error('Failed to fetch voting status');
+        }
+
+        const data = await response.json();
+        setHasVoted(data); // Set the fetched status
+      } catch (error) {
+        console.error('Error fetching voting status:', error);
+      }
+    };
+
+    fetchHasVotedStatus();
+  }, []);
+
+  
   const [showModal, setShowModal] = useState(false);
   const [showNotification, setShowNotification] = useState(false);
   const [selectedCandidate, setSelectedCandidate] = useState(null);
   const [selectedElection, setSelectedElection] = useState(null);
 
-  const elections = [
-    {
-      id: 1,
-      title: "Presidential Election 2024",
-      description: "Vote for the next president of the country",
-      candidates: [
-        {
-          id: 1,
-          name: "Sarah Johnson",
-          position: "Presidential Candidate",
-          party: "Progressive Party",
-          image: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?ixlib=rb-4.0.3"
-        },
-        {
-          id: 2,
-          name: "Michael Chen",
-          position: "Presidential Candidate",
-          party: "Democratic Alliance",
-          image: "https://images.unsplash.com/photo-1560250097-0b93528c311a?ixlib=rb-4.0.3"
-        },
-        {
-          id: 3,
-          name: "Emma Rodriguez",
-          position: "Presidential Candidate",
-          party: "People's Choice",
-          image: "https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?ixlib=rb-4.0.3"
-        }
-      ]
-    },
-    {
-      id: 2,
-      title: "Senate Election 2024",
-      description: "Vote for your state senator",
-      candidates: [
-        {
-          id: 4,
-          name: "David Wilson",
-          position: "Senate Candidate",
-          party: "Progressive Party",
-          image: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?ixlib=rb-4.0.3"
-        },
-        {
-          id: 5,
-          name: "Lisa Anderson",
-          position: "Senate Candidate",
-          party: "Democratic Alliance",
-          image: "https://images.unsplash.com/photo-1580489944761-15a19d654956?ixlib=rb-4.0.3"
-        }
-      ]
-    }
-  ];
+  const [elections, setElections] = useState([]);
 
-  const handleVoteClick = (candidate, electionId) => {
-    if (!hasVoted[electionId]) {
+  useEffect(() => {
+      const fetchData = async () => {
+        try {
+          const response = await fetch("http://localhost:5000/vote/elections", {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              "x-api-key": process.env.REACT_APP_VOTING_API_BACKEND_KEY,
+            },
+            credentials: "include", // Include session cookies
+          });
+  
+          if (!response.ok) {
+            throw new Error("Failed to fetch user data");
+          }
+  
+          const data = await response.json();
+          setElections(data.elections); // Update userData with the response
+        } catch (error) {
+          console.error("Error fetching user data:", error.message);
+        }
+      };
+  
+      fetchData();
+    }, []);
+
+    const handleVoteClick = async (candidate, electionId) => {
+      if (hasVoted[electionId]) return; // Prevent voting again
+      // Step 2: Store selected candidate and election for confirmation modal
       setSelectedCandidate(candidate);
       setSelectedElection(electionId);
+      // Save the token to state or a secure location
       setShowModal(true);
-    }
-  };
+    };
+    
+    const handleConfirmVote = async () => {
+      try {
+        // Step 1: Register the user for the election
+        const registerResponse = await fetch("http://localhost:5000/vote/register", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "x-api-key": process.env.REACT_APP_VOTING_API_BACKEND_KEY,
+          },
+          credentials: "include", // Include session cookies
+          body: JSON.stringify({ electionId: selectedElection }),
+        });
+    
+        if (!registerResponse.ok) {
+          const errorData = await registerResponse.json();
+          alert(errorData.message || "Failed to register for the election.");
+          return;
+        }
+    
+        const { token } = await registerResponse.json();
+    
 
-  const handleConfirmVote = () => {
-    setHasVoted(prev => ({
-      ...prev,
-      [selectedElection]: true
-    }));
-    setShowModal(false);
-    setShowNotification(true);
-    setTimeout(() => setShowNotification(false), 3000);
-  };
+        try {
+          // Step 3: Cast the vote using the ballot token
+          const voteResponse = await fetch("http://localhost:5000/vote/vote", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "x-api-key": process.env.REACT_APP_VOTING_API_BACKEND_KEY,
+            },
+            credentials: "include", // Include session cookies
+            body: JSON.stringify({
+              token: token, // Use the ballot token saved earlier
+              candidateId: selectedCandidate.id,
+            }),
+          });
+      
+          if (!voteResponse.ok) {
+            const errorData = await voteResponse.json();
+            alert(errorData.message || "Failed to cast the vote.");
+            return;
+          }
+      
+          // Step 4: Update the state to reflect the vote
+          setHasVoted((prev) => ({
+            ...prev,
+            [selectedElection]: true,
+          }));
+      
+          setShowModal(false);
+          setShowNotification(true);
+      
+          setTimeout(() => setShowNotification(false), 3000);
+        } catch (error) {
+          console.error("Error casting vote:", error.message);
+          alert("An error occurred while casting your vote. Please try again.");
+        }
+
+
+
+
+        
+      } catch (error) {
+        console.error("Error during registration:", error.message);
+        alert("An error occurred while registering. Please try again.");
+      }
+    };
+    
 
   return (
     <Background>
@@ -94,58 +157,68 @@ export const Home = () => {
         </div>
 
         <div className="space-y-12">
-          {elections.map((election) => (
-            <div key={election.id} className="bg-white/80 backdrop-blur-sm rounded-lg shadow-lg p-6 border border-fuchsia-200">
-              <h2 className="text-2xl font-bold text-fuchsia-800 mb-4">{election.title}</h2>
-              <p className="text-purple-600 mb-6">{election.description}</p>
+          {elections && elections.length > 0 ? (
+            elections.map((election) => (
+              <div key={election.id} className="bg-white/80 backdrop-blur-sm rounded-lg shadow-lg p-6 border border-fuchsia-200">
+                <h2 className="text-2xl font-bold text-fuchsia-800 mb-4">{election.title}</h2>
+                <p className="text-purple-600 mb-6">{election.description}</p>
 
-              {hasVoted[election.id] ? (
-                <div className="bg-fuchsia-50 border border-fuchsia-200 rounded-lg p-6 text-center">
-                  <FaCheckCircle className="w-16 h-16 text-fuchsia-500 mx-auto mb-4" />
-                  <h2 className="text-2xl font-semibold text-fuchsia-800 mb-2">
-                    Thank you for voting in {election.title}!
-                  </h2>
-                  <p className="text-purple-600">
-                    Your vote has been recorded. You cannot vote again in this election.
-                  </p>
-                </div>
-              ) : (
-                <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-                  {election.candidates.map((candidate) => (
-                    <div
-                      key={candidate.id}
-                      className="bg-white/90 rounded-lg shadow-lg overflow-hidden transition transform hover:scale-105 border border-pink-200"
-                    >
-                      <div className="w-full h-32 flex items-center justify-center overflow-hidden">
-                        <img
-                          src={candidate.image}
-                          alt={candidate.name}
-                          className="w-full h-full object-cover object-center"
-                          onError={(e) => {
-                            e.target.src = "https://images.unsplash.com/photo-1633332755192-727a05c4013d?ixlib=rb-4.0.3";
-                          }}
-                        />
-                      </div>
-                      <div className="p-6">
-                        <h3 className="text-xl font-semibold text-fuchsia-900 mb-2">
-                          {candidate.name}
-                        </h3>
-                        <p className="text-purple-600 mb-2">{candidate.position}</p>
-                        <p className="text-pink-500 mb-4">{candidate.party}</p>
-                        <button
-                          onClick={() => handleVoteClick(candidate, election.id)}
-                          className="w-full bg-gradient-to-r from-pink-500 to-fuchsia-500 text-white py-2 px-4 rounded-md hover:from-pink-600 hover:to-fuchsia-600 transition duration-300"
+                {hasVoted[election.election_id] ? (
+                  <div className="bg-fuchsia-50 border border-fuchsia-200 rounded-lg p-6 text-center">
+                    <FaCheckCircle className="w-16 h-16 text-fuchsia-500 mx-auto mb-4" />
+                    <h2 className="text-2xl font-semibold text-fuchsia-800 mb-2">
+                      Thank you for voting in {election.title}!
+                    </h2>
+                    <p className="text-purple-600">
+                      Your vote has been recorded. You cannot vote again in this election.
+                    </p>
+                  </div>
+                ) : (
+                  <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                    {Array.isArray(election.candidates) && election.candidates.length > 0 ? (
+                      election.candidates.map((candidate) => (
+                        <div
+                          key={candidate.id}
+                          className="bg-white/90 rounded-lg shadow-lg overflow-hidden transition transform hover:scale-105 border border-pink-200"
                         >
-                          Vote
-                        </button>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
-          ))}
+                          <div className="w-full h-32 flex items-center justify-center overflow-hidden">
+                            <img
+                              src={candidate.image}
+                              alt={candidate.name}
+                              className="w-full h-full object-cover object-center"
+                              onError={(e) => {
+                                e.target.src = "https://images.unsplash.com/photo-1633332755192-727a05c4013d?ixlib=rb-4.0.3";
+                              }}
+                            />
+                          </div>
+                          <div className="p-6">
+                            <h3 className="text-xl font-semibold text-fuchsia-900 mb-2">
+                              {candidate.name}
+                            </h3>
+                            <p className="text-purple-600 mb-2">{candidate.party.name}</p>
+                            <p className="text-pink-500 mb-4">{candidate.party.description}</p>
+                            <button
+                              onClick={() => handleVoteClick(candidate, election.election_id)}
+                              className="w-full bg-gradient-to-r from-pink-500 to-fuchsia-500 text-white py-2 px-4 rounded-md hover:from-pink-600 hover:to-fuchsia-600 transition duration-300"
+                            >
+                              Vote
+                            </button>
+                          </div>
+                        </div>
+                      ))
+                    ) : (
+                      <p>No candidates available for this election.</p>
+                    )}
+                  </div>
+                )}
+              </div>
+            ))
+          ) : (
+            <p>No elections available</p>
+          )}
         </div>
+
+
 
         {showModal && (
           <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">

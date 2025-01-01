@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { FaCamera } from "react-icons/fa";
 import { toast, ToastContainer } from "react-toastify";
 import { Background } from "../components/Background";
@@ -8,12 +8,42 @@ import "react-toastify/dist/ReactToastify.css";
 
 export const EditProfile = () => {
   const [formData, setFormData] = useState({
-    firstName: "John",
-    lastName: "Doe",
-    phoneNumber: "+1234567890",
-    address: "123 Main St, City, Country",
-    dateOfBirth: "1990-01-01",
+    tc_no: "",
+    first_name: "",
+    last_name: "",
+    birthdate: "",
+    gender: "",
+    phone_number: null,
+    address: null,
+    created_at: "",
+    profileImage: "https://images.unsplash.com/photo-1633332755192-727a05c4013d?ixlib=rb-4.0.3",
   });
+
+  useEffect(() => {
+      const fetchData = async () => {
+        try {
+          const response = await fetch("http://localhost:5000/profile/user", {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              "x-api-key": process.env.REACT_APP_VOTING_API_BACKEND_KEY,
+            },
+            credentials: "include", // Include session cookies
+          });
+  
+          if (!response.ok) {
+            throw new Error("Failed to fetch user data");
+          }
+  
+          const data = await response.json();
+          setFormData(data.record); // Update userData with the response
+        } catch (error) {
+          console.error("Error fetching user data:", error.message);
+        }
+      };
+  
+      fetchData();
+    }, []);
 
   const [profileImage, setProfileImage] = useState("https://images.unsplash.com/photo-1633332755192-727a05c4013d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1180&q=80");
   const [isHovered, setIsHovered] = useState(false);
@@ -93,60 +123,60 @@ export const EditProfile = () => {
             <form onSubmit={handleSubmit} className="space-y-6">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                  <label htmlFor="firstName" className="text-white block text-body font-body text-foreground mb-2">
+                  <label htmlFor="first_name" className="text-white block text-body font-body text-foreground mb-2">
                     First Name
                   </label>
                   <input
                     type="text"
-                    id="firstName"
-                    name="firstName"
+                    id="first_name"
+                    name="first_name"
                     required
-                    value={formData.firstName}
+                    value={formData.first_name}
                     onChange={handleInputChange}
                     className="w-full px-4 py-2 rounded-md border border-input focus:outline-none focus:ring-2 focus:ring-ring bg-background"
                   />
                 </div>
 
                 <div>
-                  <label htmlFor="lastName" className="text-white block text-body font-body text-foreground mb-2">
+                  <label htmlFor="last_name" className="text-white block text-body font-body text-foreground mb-2">
                     Last Name
                   </label>
                   <input
                     type="text"
-                    id="lastName"
-                    name="lastName"
+                    id="last_name"
+                    name="last_name"
                     required
-                    value={formData.lastName}
+                    value={formData.last_name}
                     onChange={handleInputChange}
                     className="w-full px-4 py-2 rounded-md border border-input focus:outline-none focus:ring-2 focus:ring-ring bg-background"
                   />
                 </div>
 
                 <div>
-                  <label htmlFor="phoneNumber" className="text-white block text-body font-body text-foreground mb-2">
+                  <label htmlFor="phone_number" className="text-white block text-body font-body text-foreground mb-2">
                     Phone Number
                   </label>
                   <input
                     type="tel"
-                    id="phoneNumber"
-                    name="phoneNumber"
+                    id="phone_number"
+                    name="phone_number"
                     required
-                    value={formData.phoneNumber}
+                    value={formData.phone_number}
                     onChange={handleInputChange}
                     className="w-full px-4 py-2 rounded-md border border-input focus:outline-none focus:ring-2 focus:ring-ring bg-background"
                   />
                 </div>
 
                 <div>
-                  <label htmlFor="dateOfBirth" className="text-white block text-body font-body text-foreground mb-2">
+                  <label htmlFor="birthdate" className="text-white block text-body font-body text-foreground mb-2">
                     Date of Birth
                   </label>
                   <input
                     type="date"
-                    id="dateOfBirth"
-                    name="dateOfBirth"
+                    id="birthdate"
+                    name="birthdate"
                     required
-                    value={formData.dateOfBirth}
+                    value={formData.birthdate}
                     onChange={handleInputChange}
                     className="w-full px-4 py-2 rounded-md border border-input focus:outline-none focus:ring-2 focus:ring-ring bg-background"
                   />
