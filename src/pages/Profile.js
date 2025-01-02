@@ -6,6 +6,7 @@ import { Bar } from "react-chartjs-2";
 import { Background } from "../components/Background";
 import { Navbar } from "../components/Navbar";
 
+
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
 export const Profile = () => {
@@ -20,7 +21,7 @@ export const Profile = () => {
     phone_number: null,
     address: null,
     created_at: "",
-    profileImage: "https://images.unsplash.com/photo-1633332755192-727a05c4013d?ixlib=rb-4.0.3",
+    profileImage: "/images/profile.png",
   });
 
   const handleEditProfile = () => {
@@ -54,78 +55,79 @@ export const Profile = () => {
   }, []);
 
   return (
-    <Background >
-      <Navbar />
-      <div className="min-h-screen p-6 ">
-        <h1 className="text-4xl font-bold text-white text-center mb-10">Profile</h1>
-        <div className="max-w-7xl mx-auto bg-white rounded-lg shadow-sm overflow-hidden">
-          <div className="bg-pink-300 grid md:grid-cols-2">
-            <div className="bg-fuchsia-900 space-y-6 " >
-              <h2 className="text-3xl font-bold text-white text-center">My Profile</h2>
-              <div className="flex justify-center mb-6">
-                <img 
-                  src={userData.profileImage} 
-                  alt="Profile" 
-                  className="w-48 h-48 rounded-full object-cover border-4 border-gray-600"
-                />
-              </div>
-              <div className="space-y-4 bg-fuchsia-200 p-6 rounded">
-                <div className="flex items-center gap-4">
-                  <FaUser className="text-gray-600 text-xl" />
-                  <div>
-                    <p className="text-sm font-semibold text-gray-600">TC No</p>
-                    <p className="text-gray-900">{userData.tc_no}</p>
-                  </div>
-                </div>
-                <div className="flex items-center gap-4">
-                  <FaUser className="text-gray-600 text-xl" />
-                  <div>
-                    <p className="text-sm font-semibold text-gray-600">Name</p>
-                    <p className="text-gray-900">{userData.first_name} {userData.last_name}</p>
-                  </div>
-                </div>
-                <div className="flex items-center gap-4">
-                  <FaBirthdayCake className="text-gray-600 text-xl" />
-                  <div>
-                    <p className="text-sm font-semibold text-gray-600">Birth Date</p>
-                    <p className="text-gray-900">{userData.birthdate}</p>
-                  </div>
-                </div>
-                <div className="flex items-center gap-4">
-                  <FaBirthdayCake className="text-gray-600 text-xl" />
-                  <div>
-                    <p className="text-sm font-semibold text-gray-600">Gender</p>
-                    <p className="text-gray-900">{userData.gender}</p>
-                  </div>
-                </div>
-                <div className="flex items-center gap-4">
-                  <FaPhone className="text-gray-600 text-xl" />
-                  <div>
-                    <p className="text-sm font-semibold text-gray-600">Phone</p>
-                    <p className="text-gray-900">{userData.phone_number}</p>
-                  </div>
-                </div>
-                <div className="flex items-center gap-4">
-                  <FaMapMarkerAlt className="text-gray-600 text-xl" />
-                  <div>
-                    <p className="text-sm font-semibold text-gray-600 ">Address</p>
-                    <p className="text-gray-900">{userData.address}</p>
-                  </div>
-                </div>
-              </div>
-              <button
-                onClick={handleEditProfile}
-                className="flex items-center justify-center gap-2 bg-gray-600 text-white px-6 py-3 rounded-lg hover:bg-purple-400 transition-colors duration-300 shadow-lg hover:shadow-xl font-semibold text-lg ml-44 z-10 relative"
-              >
-                <FaEdit className="text-xl" />
-                Edit Profile
-              </button>
+    <Background>
+  <Navbar />
+  <div className="min-h-screen p-6">
+    <h1 className="text-4xl font-bold text-white text-center mb-10">Profile</h1>
+    <div className="max-w-7xl mx-auto bg-white rounded-lg shadow-sm overflow-hidden">
+      <div className="bg-fuchsia-900 space-y-6">
+        <h2 className="text-3xl font-bold text-white text-center">My Profile</h2>
+        <div className="flex justify-center mb-6">
+          <img
+            src={userData.profileImage}
+            alt="Profile"
+            className="w-48 h-48 rounded-full object-cover border-4 border-gray-600"
+          />
+        </div>
+        <div className="space-y-4 bg-fuchsia-200 p-6 rounded">
+          {/* User Data Fields */}
+          <div className="flex items-center gap-4">
+            <FaUser className="text-gray-600 text-xl" />
+            <div>
+              <p className="text-sm font-semibold text-gray-600">TC No</p>
+              <p className="text-gray-900">{userData.tc_no}</p>
             </div>
-
-
+          </div>
+          <div className="flex items-center gap-4">
+            <FaUser className="text-gray-600 text-xl" />
+            <div>
+              <p className="text-sm font-semibold text-gray-600">Name</p>
+              <p className="text-gray-900">{userData.first_name} {userData.last_name}</p>
+            </div>
+          </div>
+          <div className="flex items-center gap-4">
+            <FaBirthdayCake className="text-gray-600 text-xl" />
+            <div>
+              <p className="text-sm font-semibold text-gray-600">Birth Date</p>
+              <p className="text-gray-900">{userData.birthdate}</p>
+            </div>
+          </div>
+          <div className="flex items-center gap-4">
+            <FaBirthdayCake className="text-gray-600 text-xl" />
+            <div>
+              <p className="text-sm font-semibold text-gray-600">Gender</p>
+              <p className="text-gray-900">{userData.gender}</p>
+            </div>
+          </div>
+          <div className="flex items-center gap-4">
+            <FaPhone className="text-gray-600 text-xl" />
+            <div>
+              <p className="text-sm font-semibold text-gray-600">Phone</p>
+              <p className="text-gray-900">{userData.phone_number}</p>
+            </div>
+          </div>
+          <div className="flex items-center gap-4">
+            <FaMapMarkerAlt className="text-gray-600 text-xl" />
+            <div>
+              <p className="text-sm font-semibold text-gray-600">Address</p>
+              <p className="text-gray-900">{userData.address}</p>
+            </div>
           </div>
         </div>
+        {/* Button Container */}
+        <div className="flex justify-center mt-6">
+          <button
+            onClick={handleEditProfile}
+            className="flex items-center justify-center gap-2 bg-gray-600 text-white px-6 py-3 rounded-lg hover:bg-purple-400 transition-colors duration-300 shadow-lg hover:shadow-xl font-semibold text-lg z-10 relative"
+          >
+            <FaEdit className="text-xl" />
+            Edit Profile
+          </button>
+        </div>
       </div>
-    </Background>
+    </div>
+  </div>
+</Background>
+
   );
 };

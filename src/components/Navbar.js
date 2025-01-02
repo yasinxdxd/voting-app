@@ -31,7 +31,6 @@ export const Navbar = () => {
     { name: "Home", icon: <FaHome className="mr-2" />, to: "/home" },
     { name: "Results", icon: <FaChartBar className="mr-2" />, to: "/results" },
     { name: "About Us", icon: <FaInfoCircle className="mr-2" />, to: "/aboutus" },
-    { name: "Contact", icon: <FaEnvelope className="mr-2" />, to: "/contact" },
   ];
 
   const userMenuItems = [
@@ -40,7 +39,7 @@ export const Navbar = () => {
     {
       name: "Logout",
       icon: <FaSignOutAlt className="mr-2" />,
-      to: "/signin",
+      to: "/",
       onClick: async () => {
         try {
           // Send the GET request to logout
