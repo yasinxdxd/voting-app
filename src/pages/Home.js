@@ -159,15 +159,15 @@ export const Home = () => {
         <div className="space-y-12">
           {elections && elections.length > 0 ? (
             elections.map((election) => (
-              <div key={election.id} className="bg-white/80 backdrop-blur-sm rounded-lg shadow-lg p-6 border border-fuchsia-200">
-                <h2 className="text-2xl font-bold text-fuchsia-800 mb-4">{election.title}</h2>
+              <div key={election.election_id} className="bg-white/80 backdrop-blur-sm rounded-lg shadow-lg p-6 border border-fuchsia-200">
+                <h2 className="text-2xl font-bold text-fuchsia-800 mb-4">{election.election_title}</h2>
                 <p className="text-purple-600 mb-6">{election.description}</p>
 
                 {hasVoted[election.election_id] ? (
                   <div className="bg-fuchsia-50 border border-fuchsia-200 rounded-lg p-6 text-center">
                     <FaCheckCircle className="w-16 h-16 text-fuchsia-500 mx-auto mb-4" />
                     <h2 className="text-2xl font-semibold text-fuchsia-800 mb-2">
-                      Thank you for voting in {election.title}!
+                      Thank you for voting in {election.election_title}!
                     </h2>
                     <p className="text-purple-600">
                       Your vote has been recorded. You cannot vote again in this election.

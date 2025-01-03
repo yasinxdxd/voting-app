@@ -18,7 +18,7 @@ export const Profile = () => {
     birthdate: "",
     gender: "",
     phone_number: null,
-    address: null,
+    residence: {city: "", county: "", address: ""},
     created_at: "",
     profileImage: "https://images.unsplash.com/photo-1633332755192-727a05c4013d?ixlib=rb-4.0.3",
   });
@@ -109,7 +109,11 @@ export const Profile = () => {
                   <FaMapMarkerAlt className="text-gray-600 text-xl" />
                   <div>
                     <p className="text-sm font-semibold text-gray-600 ">Address</p>
-                    <p className="text-gray-900">{userData.address}</p>
+                    {userData.residence != null ? 
+                    <><p className="text-gray-900">{userData.residence.city}</p>
+                    <p className="text-gray-900">{userData.residence.county}</p>
+                    <p className="text-gray-900">{userData.residence.address}</p></>
+                     : <></>}
                   </div>
                 </div>
               </div>

@@ -3,18 +3,20 @@ import { FaCamera } from "react-icons/fa";
 import { toast, ToastContainer } from "react-toastify";
 import { Background } from "../components/Background";
 import { Navbar } from "../components/Navbar";
+import { useNavigate } from 'react-router-dom';
 
 import "react-toastify/dist/ReactToastify.css";
+import CityCountySelector from "../components/CityCountySelector";
 
 export const EditProfile = () => {
   const [formData, setFormData] = useState({
     tc_no: "",
     first_name: "",
     last_name: "",
-    birthdate: "",
+    birthdate: null,
     gender: "",
     phone_number: null,
-    address: null,
+    residence: {city_id: "", county_id: "", address: ""},
     created_at: "",
     profileImage: "https://images.unsplash.com/photo-1633332755192-727a05c4013d?ixlib=rb-4.0.3",
   });
@@ -48,11 +50,15 @@ export const EditProfile = () => {
   const [profileImage, setProfileImage] = useState("https://images.unsplash.com/photo-1633332755192-727a05c4013d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1180&q=80");
   const [isHovered, setIsHovered] = useState(false);
 
+  const navigate = useNavigate();
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
       ...prev,
-      [name]: value,
+      [name]: (name === "birthdate" && value !== null)
+                ? value.split("T")[0] // Ensure the correct format
+              : value
     }));
   };
 
@@ -71,9 +77,33 @@ export const EditProfile = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     // Simulate API call
-    setTimeout(() => {
-      toast.success("Profile updated successfully!");
-    }, 1000);
+    console.log(formData);
+    const fetchData = async () => {
+      try {
+        const response = await fetch("http://localhost:5000/profile/set/all", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "x-api-key": process.env.REACT_APP_VOTING_API_BACKEND_KEY,
+          },
+          body: JSON.stringify(formData),
+          credentials: "include", // Include session cookies
+        });
+
+        if (response.ok) {
+          navigate('/profile');
+        } else {
+          throw new Error("Failed to fetch user data");
+        }
+
+        const data = await response.json();
+        setFormData(data.record); // Update userData with the response
+      } catch (error) {
+        console.error("Error fetching user data:", error.message);
+      }
+    };
+
+    fetchData();
   };
 
   return (
@@ -182,7 +212,12 @@ export const EditProfile = () => {
                   />
                 </div>
 
-                <div className="md:col-span-2">
+                <CityCountySelector
+                  residence={formData.residence}
+                  setFormData={setFormData}
+                />
+
+                {/* <div className="md:col-span-2">
                   <label htmlFor="address" className="text-white block text-body font-body text-foreground mb-2">
                     Address
                   </label>
@@ -195,7 +230,7 @@ export const EditProfile = () => {
                     rows="3"
                     className="w-full px-4 py-2 rounded-md border border-input focus:outline-none focus:ring-2 focus:ring-ring bg-background"
                   ></textarea>
-                </div>
+                </div> */}
               </div>
 
               <div className="flex justify-end">
