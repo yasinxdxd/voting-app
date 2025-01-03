@@ -40,6 +40,7 @@ export const Profile = () => {
         });
 
         if (!response.ok) {
+          navigate('/unauthorized');
           throw new Error("Failed to fetch user data");
         }
 

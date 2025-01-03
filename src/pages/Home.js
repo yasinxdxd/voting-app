@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from 'react-router-dom';
 import { FaUserCircle, FaCheckCircle, FaTimesCircle } from "react-icons/fa";
 import { IoMdClose } from "react-icons/io";
 import { Navbar } from "../components/Navbar";
@@ -6,6 +7,8 @@ import { Background } from "../components/Background";
 
 export const Home = () => {
   const [hasVoted, setHasVoted] = useState({});
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchHasVotedStatus = async () => {
@@ -19,6 +22,7 @@ export const Home = () => {
         });
 
         if (!response.ok) {
+          navigate('/unauthorized');
           throw new Error('Failed to fetch voting status');
         }
 

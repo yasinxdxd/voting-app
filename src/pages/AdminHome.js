@@ -1,4 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+
 
 export const AdminHome = () => {
   const [form, setForm] = useState({
@@ -24,6 +26,32 @@ export const AdminHome = () => {
       fields: { ...form.fields, [e.target.name]: e.target.value },
     });
   };
+
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch("http://localhost:5000/admin/validate", {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            "x-api-key": process.env.REACT_APP_VOTING_API_BACKEND_KEY,
+          },
+          credentials: "include", // Include session cookies
+        });
+
+        if (!response.ok) {
+          navigate('/unauthorized');
+          throw new Error("Failed to fetch user data");
+        }
+      } catch (error) {
+        console.error("Error fetching user data:", error.message);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   // Handle form submission
   const handleSubmit = async (e) => {

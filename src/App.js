@@ -8,6 +8,7 @@ import { EditProfile } from "./pages/EditProfile.js";
 import { AboutUs } from "./pages/AboutUs.js";
 import { AdminSignIn } from "./pages/AdminSignIn.js";
 import { AdminHome } from "./pages/AdminHome.js";
+import UnauthorizedPage from './pages/401.js';
 
 
 const App = () => {
@@ -24,6 +25,8 @@ const App = () => {
 
                 <Route path="/admin/signin" element={<AdminSignIn />} />
                 <Route path="/admin/home" element={<AdminHome />} />
+                
+                <Route path="/unauthorized" element={<UnauthorizedPage />} />
 
             </Routes>
         </Router>
