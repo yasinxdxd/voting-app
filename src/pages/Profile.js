@@ -20,7 +20,7 @@ export const Profile = () => {
     phone_number: null,
     residence: {city: "", county: "", address: ""},
     created_at: "",
-    profileImage: "https://images.unsplash.com/photo-1633332755192-727a05c4013d?ixlib=rb-4.0.3",
+    profileImage: "/images/profile.png",
   });
 
   const handleEditProfile = () => {
@@ -45,6 +45,7 @@ export const Profile = () => {
         }
 
         const data = await response.json();
+        data.record.profileImage = "/images/profile.png";
         setUserData(data.record); // Update userData with the response
       } catch (error) {
         console.error("Error fetching user data:", error.message);
@@ -60,7 +61,7 @@ export const Profile = () => {
       <div className="min-h-screen p-6 ">
         <h1 className="text-4xl font-bold text-white text-center mb-10">Profile</h1>
         <div className="max-w-7xl mx-auto bg-white rounded-lg shadow-sm overflow-hidden">
-          <div className="bg-pink-300 grid md:grid-cols-2">
+          {/* <div className="bg-pink-300 grid md:grid-cols-2"> */}
             <div className="bg-fuchsia-900 space-y-6 " >
               <h2 className="text-3xl font-bold text-white text-center">My Profile</h2>
               <div className="flex justify-center mb-6">
@@ -118,17 +119,19 @@ export const Profile = () => {
                   </div>
                 </div>
               </div>
-              <button
-                onClick={handleEditProfile}
-                className="flex items-center justify-center gap-2 bg-gray-600 text-white px-6 py-3 rounded-lg hover:bg-purple-400 transition-colors duration-300 shadow-lg hover:shadow-xl font-semibold text-lg ml-44 z-10 relative"
-              >
-                <FaEdit className="text-xl" />
-                Edit Profile
-              </button>
+              <div className="flex justify-center mt-6">
+                <button
+                  onClick={handleEditProfile}
+                  className="flex items-center justify-center gap-2 bg-gray-600 text-white px-6 py-3 rounded-lg hover:bg-purple-400 transition-colors duration-300 shadow-lg hover:shadow-xl font-semibold text-lg z-10 relative"
+                >
+                  <FaEdit className="text-xl" />
+                  Edit Profile
+                </button>
+              </div>
             </div>
 
 
-          </div>
+          {/* </div> */}
         </div>
       </div>
     </Background>

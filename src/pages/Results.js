@@ -56,7 +56,7 @@ const ElectionsChart = () => {
         <Background>
         <Navbar />
         <div>
-        <h1 className="text-3xl font-bold text-center mb-6">Elections Chart</h1>
+        <h1 className="text-3xl font-bold text-center mb-6 text-white">Elections Chart</h1>
 
         {/* Dropdown to select an election */}
         {elections.length > 0 && (
@@ -79,7 +79,7 @@ const ElectionsChart = () => {
 
            {/* Chart */}
             {chartData && (
-                <div className="w-full max-w-3xl mx-auto p-4">
+                <div className="w-full max-w-3xl mx-auto p-4 bg-gray-300 rounded-md">
                     <Bar
                         data={chartData}
                         options={{

@@ -10,12 +10,13 @@ import { AdminSignIn } from "./pages/AdminSignIn.js";
 import { AdminHome } from "./pages/AdminHome.js";
 import UnauthorizedPage from './pages/401.js';
 import ElectionsChart from './pages/Results.js';
-
+import { Index } from './pages/index.js';
 
 const App = () => {
     return (
         <Router>
             <Routes>
+                <Route path="/" element={<Index />} />
                 <Route path="/signin" element={<SignIn />} />
                 <Route path="/signup" element={<SignUp />} />
                 <Route path="/home" element={<Home />} />

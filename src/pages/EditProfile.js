@@ -18,7 +18,7 @@ export const EditProfile = () => {
     phone_number: null,
     residence: {city_id: "", county_id: "", address: ""},
     created_at: "",
-    profileImage: "https://images.unsplash.com/photo-1633332755192-727a05c4013d?ixlib=rb-4.0.3",
+    profileImage: "/images/profile.png",
   });
 
   const navigate = useNavigate();
@@ -49,7 +49,7 @@ export const EditProfile = () => {
       fetchData();
     }, []);
 
-  const [profileImage, setProfileImage] = useState("https://images.unsplash.com/photo-1633332755192-727a05c4013d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1180&q=80");
+  const [profileImage, setProfileImage] = useState("/images/profile.png");
   const [isHovered, setIsHovered] = useState(false);
 
 
