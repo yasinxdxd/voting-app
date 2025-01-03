@@ -9,6 +9,7 @@ import { AboutUs } from "./pages/AboutUs.js";
 import { AdminSignIn } from "./pages/AdminSignIn.js";
 import { AdminHome } from "./pages/AdminHome.js";
 import UnauthorizedPage from './pages/401.js';
+import ElectionsChart from './pages/Results.js';
 
 
 const App = () => {
@@ -25,6 +26,8 @@ const App = () => {
 
                 <Route path="/admin/signin" element={<AdminSignIn />} />
                 <Route path="/admin/home" element={<AdminHome />} />
+                
+                <Route path="/results" element={<ElectionsChart />} />
                 
                 <Route path="/unauthorized" element={<UnauthorizedPage />} />
 
